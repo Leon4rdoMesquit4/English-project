@@ -16,6 +16,7 @@ struct CreateNewItemView: View {
     @State var desc: String = ""
     @State var selectedImage: PhotosPickerItem?
     @State var selectedImageData: Data?
+
     var body: some View {
         NavigationStack {
             VStack(spacing: nil) {

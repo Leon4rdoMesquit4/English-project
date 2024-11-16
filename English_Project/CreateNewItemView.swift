@@ -16,25 +16,25 @@ struct CreateNewItemView: View {
     @State var desc: String = ""
     @State var selectedImage: PhotosPickerItem?
     @State var selectedImageData: Data?
-    
+
     var body: some View {
-        NavigationStack{
+        NavigationStack {
             VStack(spacing: nil) {
-                List{
-                    Section{
+                List {
+                    Section {
                         TextField("Write the name of the new word...", text: $title)
                         TextField("Origin of the new word...", text: $origin)
                     } header: {
                         Text("Word")
                     }
-                        
-                    Section{
+
+                    Section {
                         TextEditor(text: $desc)
                     } header: {
                         Text("Description")
                     }
-                    
-                    Section{
+
+                    Section {
 //                        ScrollImages()
                         if let selectedImageData, let uiImage = UIImage(data: selectedImageData) {
                             Image(uiImage: uiImage)
@@ -42,31 +42,37 @@ struct CreateNewItemView: View {
                                 .scaledToFill()
                                 .frame(maxWidth: .infinity, maxHeight: 300)
                         }
-                        
-                        HStack(alignment: .center){
+
+                        HStack(alignment: .center) {
                             Spacer()
                             PhotosPicker(selection: $selectedImage,
                                    matching: .images,
-                                   photoLibrary: .shared()){
+                                   photoLibrary: .shared()) {
                                 Text("Add an Image")
                             }
                             Spacer()
                         }
-                            
+
                     }
                 }
             }
             .navigationTitle("Write a new Word")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar{
+            .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("Cancel"){
+                    Button("Cancel") {
                         dismiss()
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Submit"){
-                        let item = Item(times: 1, name: title, descrip: desc, origin: origin, image: selectedImageData ?? nil )
+                    Button("Submit") {
+                        let item = Item(
+                            times: 1,
+                            name: title,
+                            descrip: desc,
+                            origin: origin,
+                            image: selectedImageData ?? nil
+                        )
                         context.insert(item)
                         dismiss()
                     }
@@ -74,8 +80,8 @@ struct CreateNewItemView: View {
                         .disabled(title.isEmpty || desc.isEmpty)
                 }
         }
-            .task(id: selectedImage){
-                if let data = try? await selectedImage?.loadTransferable(type: Data.self){
+            .task(id: selectedImage) {
+                if let data = try? await selectedImage?.loadTransferable(type: Data.self) {
                     selectedImageData = data
                     print("sppp")
                 }
@@ -92,13 +98,13 @@ struct CreateNewItemView: View {
 struct ScrollImages: View {
     var body: some View {
         ScrollView(.horizontal) {
-            HStack(spacing: 15){
-                ForEach(0..<10){_ in
+            HStack(spacing: 15) {
+                ForEach(0..<10) {_ in
                     Image("Flu")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 115)
-                        .mask{
+                        .mask {
                             RoundedRectangle(cornerRadius: 10)
                         }
                         .overlay {
@@ -108,11 +114,11 @@ struct ScrollImages: View {
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
                                         .frame(width: 23)
-                                        .background{Circle().foregroundStyle(.white)}
+                                        .background {Circle().foregroundStyle(.white)}
                                         .offset(CGSize(width: -6, height: -6))
-                                    
+
                                         .foregroundStyle(.red)
-                                    
+
                                     Spacer()
                                 }
                                 Spacer()
