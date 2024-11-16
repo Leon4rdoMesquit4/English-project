@@ -16,70 +16,68 @@ struct CreateNewItemView: View {
     @State var desc: String = ""
     @State var selectedImage: PhotosPickerItem?
     @State var selectedImageData: Data?
-    
     var body: some View {
-        NavigationStack{
+        NavigationStack {
             VStack(spacing: nil) {
-                List{
-                    Section{
+                List {
+                    Section {
                         TextField("Write the name of the new word...", text: $title)
                         TextField("Origin of the new word...", text: $origin)
                     } header: {
                         Text("Word")
                     }
-                        
-                    Section{
+                    Section {
                         TextEditor(text: $desc)
                     } header: {
                         Text("Description")
                     }
-                    
-                    Section{
-//                        ScrollImages()
+                    Section {
                         if let selectedImageData, let uiImage = UIImage(data: selectedImageData) {
                             Image(uiImage: uiImage)
                                 .resizable()
                                 .scaledToFill()
                                 .frame(maxWidth: .infinity, maxHeight: 300)
                         }
-                        
-                        HStack(alignment: .center){
+                        HStack(alignment: .center) {
                             Spacer()
                             PhotosPicker(selection: $selectedImage,
-                                   matching: .images,
-                                   photoLibrary: .shared()){
+                                         matching: .images,
+                                         photoLibrary: .shared()) {
                                 Text("Add an Image")
                             }
                             Spacer()
                         }
-                            
                     }
                 }
             }
             .navigationTitle("Write a new Word")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar{
+            .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("Cancel"){
+                    Button("Cancel") {
                         dismiss()
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Submit"){
-                        let item = Item(times: 1, name: title, descrip: desc, origin: origin, image: selectedImageData ?? nil )
+                    Button("Submit") {
+                        let item = Item(
+                            times: 1,
+                            name: title,
+                            descrip: desc,
+                            origin: origin,
+                            image: selectedImageData ?? nil
+                        )
                         context.insert(item)
                         dismiss()
                     }
                     .buttonStyle(.borderedProminent)
-                        .disabled(title.isEmpty || desc.isEmpty)
+                    .disabled(title.isEmpty || desc.isEmpty)
                 }
-        }
-            .task(id: selectedImage){
-                if let data = try? await selectedImage?.loadTransferable(type: Data.self){
+            }
+            .task(id: selectedImage) {
+                if let data = try? await selectedImage?.loadTransferable(type: Data.self) {
                     selectedImageData = data
-                    print("sppp")
                 }
-                print("sds")
             }
         }
     }

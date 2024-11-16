@@ -12,27 +12,28 @@ import AVFoundation
 struct ContentView: View {
     @Environment(\.modelContext) private var context
     @Query(sort: \Item.date, order: .reverse) private var items: [Item]
-    private var filteredItems: [Item]{
-        guard !vm.searchItem.isEmpty else { return items }
-        return items.filter{ $0.name.localizedCaseInsensitiveContains(vm.searchItem) || $0.descrip.localizedCaseInsensitiveContains(vm.searchItem)}
+    private var filteredItems: [Item] {
+        guard !viewModel.searchItem.isEmpty else { return items }
+        return items.filter {
+            $0.name.localizedCaseInsensitiveContains(viewModel.searchItem)
+            ||
+            $0.descrip.localizedCaseInsensitiveContains(viewModel.searchItem)
+        }
     }
-    @Bindable var vm: contentViewModel = contentViewModel()
-    
+    @Bindable var viewModel: ContentViewModel = ContentViewModel()
     var body: some View {
         NavigationStack {
-            Group{
-                List{
+            Group {
+                List {
                     ForEach(filteredItems) { item in
-                        NavigationLink{
+                        NavigationLink {
                             EditItemView(item: item)
                         } label: {
                             ListCell(item: item)
                         }
-                        .swipeActions(edge: .leading, allowsFullSwipe: false){
-                            Button{
-                                
-                                vm.speak(item.name)
-                                
+                        .swipeActions(edge: .leading, allowsFullSwipe: false) {
+                            Button {
+                                viewModel.speak(item.name)
                             } label: {
                                 Image(systemName: "speaker.3.fill")
                             }
@@ -43,60 +44,57 @@ struct ContentView: View {
                             context.delete(item)
                         }
                     }
-                    
                 }.listStyle(.plain)
-                    .overlay{
+                    .overlay {
                         if items.isEmpty {
-                            ContentUnavailableView("No Words", systemImage: "pencil.and.list.clipboard", description: Text("You need to add a new word!"))
+                            ContentUnavailableView(
+                                "No Words",
+                                systemImage: "pencil.and.list.clipboard",
+                                description: Text("You need to add a new word!")
+                            )
                         }
                     }
-                
             }.navigationTitle("^[\(items.count) word](inflect: true)")
-                .toolbar{
-                    ToolbarItem(placement: .topBarTrailing){
-                        Menu{
-                            Button("Info"){
-                                vm.info = true
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Menu {
+                            Button("Info") {
+                                viewModel.info = true
                             }
-                            Picker("Voice velocity", selection: $vm.velocity){
-                                Button("Slow"){
-                                    vm.velocity = 0.1
+                            Picker("Voice velocity", selection: $viewModel.velocity) {
+                                Button("Slow") {
+                                    viewModel.velocity = 0.1
                                 }
-                                Button("Normal"){
-                                    vm.velocity = 0.3
+                                Button("Normal") {
+                                    viewModel.velocity = 0.3
                                 }
-                                Button("Fast"){
-                                    vm.velocity = 0.6
+                                Button("Fast") {
+                                    viewModel.velocity = 0.6
                                 }
                             }.pickerStyle(.menu)
-                            
                         } label: {
                             Image(systemName: "ellipsis.circle")
                         }
-                        
                     }
-                    
                 }
-                .toolbar{
-                    Button{
-                        vm.newItem = true
-                        
+                .toolbar {
+                    Button {
+                        viewModel.newItem = true
                     } label: {
                         Image(systemName: "plus.square.fill")
                     }
-                    
-                    
                 }
-                .searchable(text: $vm.searchItem, placement: .navigationBarDrawer(displayMode: .automatic), prompt: "Search a word/phrase")
-            
+                .searchable(
+                    text: $viewModel.searchItem,
+                    placement: .navigationBarDrawer(displayMode: .automatic),
+                    prompt: "Search a word/phrase"
+                )
         }
-        .sheet(isPresented: $vm.newItem){
+        .sheet(isPresented: $viewModel.newItem) {
             CreateNewItemView()
-            
-        }.sheet(isPresented: $vm.info){
+        }.sheet(isPresented: $viewModel.info) {
             InfoView()
                 .presentationDetents([.fraction(0.28)])
-            
         }
     }
 }
@@ -105,5 +103,3 @@ struct ContentView: View {
     ContentView()
         .modelContainer(for: Item.self, inMemory: true)
 }
-
-

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct InfoView: View {
     var body: some View {
-        NavigationStack{
+        NavigationStack {
             VStack(alignment: .center) {
                 Text("WORDS COUNT")
                     .font(.title3)
@@ -17,16 +17,15 @@ struct InfoView: View {
                     .padding(.top, 20)
                     .padding(.bottom, 8)
                 Divider()
-                HStack() {
+                HStack {
                     Spacer()
-                    VStack(alignment: .leading, spacing: 10){
+                    VStack(alignment: .leading, spacing: 10) {
                         HStack {
                             Text("1,000 to 2 - ").fontWeight(.heavy)
                                 .font(.title3)
                                 .foregroundStyle(.red)
                             Text("Basic conversation")
                         }
-                        
                         HStack {
                             Text("8,000 - ").fontWeight(.heavy)
                                 .font(.title3)
@@ -40,8 +39,6 @@ struct InfoView: View {
                             Text("University level")
                         }
                         Spacer()
-                        
-                        
                     }
                     Spacer()
                 }.padding(.top)
@@ -53,4 +50,3 @@ struct InfoView: View {
 #Preview {
     InfoView()
 }
-

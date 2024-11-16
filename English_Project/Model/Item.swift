@@ -10,7 +10,6 @@ import SwiftData
 
 @Model
 class Item {
-    
     var times: Int
     var name: String
     var descrip: String
@@ -18,8 +17,15 @@ class Item {
     var image: Data?
     var date: Date
     var resource: String?
-    
-    init(times: Int, name: String, descrip: String , origin: String, image: Data? = nil, date: Date = .now, resource: String = "") {
+    init(
+        times: Int,
+        name: String,
+        descrip: String,
+        origin: String,
+        image: Data? = nil,
+        date: Date = .now,
+        resource: String = ""
+    ) {
         self.times = times
         self.name = name
         self.descrip = descrip
@@ -28,5 +34,4 @@ class Item {
         self.date = date
         self.resource = resource
     }
-    
 }
